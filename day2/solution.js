@@ -1,6 +1,6 @@
 const fs = require("fs");
-const input = fs.readFileSync("day2/input.txt", "utf-8").trim().split("\n");
-console.log('input', input);
+let input = fs.readFileSync("day2/input.txt", "utf-8").trim().split("\n");
+
 // --- Day 2: Password Philosophy ---
 // Your flight departs in a few days from the coastal airport; the easiest way down to the coast from here is via toboggan.
 
@@ -20,3 +20,78 @@ console.log('input', input);
 // In the above example, 2 passwords are valid. The middle password, cdefg, is not; it contains no instances of b, but needs at least 1. The first and third passwords are valid: they contain one a or nine c, both within the limits of their respective policies.
 
 // How many passwords are valid according to their policies?
+
+const countLetters = (password) => {
+  let letterCount = {};
+  for (let i = 0; i < password.length; i += 1) {
+    if (letterCount[password[i]] !== undefined) {
+      letterCount[password[i]] += 1;
+    } else {
+      letterCount[password[i]] = 1;
+    }
+  }
+  return letterCount;
+};
+
+const getValidPasswords = (input) => {
+  let counter = 0;
+  input.forEach((item) => {
+    const min = item.substring(0, item.indexOf("-"));
+    const max = item.substring(item.indexOf("-") + 1, item.indexOf(" "));
+    const letter = item.substring(item.indexOf(" ") + 1, item.indexOf(":"));
+    const password = item.substring(item.indexOf(":") + 2);
+    const letterCount = countLetters(password);
+
+    if (
+      letterCount[letter] < min ||
+      letterCount[letter] > max ||
+      letterCount[letter] === undefined
+    ) {
+      return;
+    } else {
+      counter += 1;
+    }
+  });
+  return counter;
+};
+
+console.log("getValidPasswords result", getValidPasswords(input));
+
+// --- Part Two ---
+// While it appears you validated the passwords correctly, they don't seem to be what the Official Toboggan Corporate Authentication System is expecting.
+
+// The shopkeeper suddenly realizes that he just accidentally explained the password policy rules from his old job at the sled rental place down the street! The Official Toboggan Corporate Policy actually works a little differently.
+
+// Each policy actually describes two positions in the password, where 1 means the first character, 2 means the second character, and so on. (Be careful; Toboggan Corporate Policies have no concept of "index zero"!) Exactly one of these positions must contain the given letter. Other occurrences of the letter are irrelevant for the purposes of policy enforcement.
+
+// Given the same example list from above:
+
+// 1-3 a: abcde is valid: position 1 contains a and position 3 does not.
+// 1-3 b: cdefg is invalid: neither position 1 nor position 3 contains b.
+// 2-9 c: ccccccccc is invalid: both position 2 and position 9 contain c.
+// How many passwords are valid according to the new interpretation of the policies?
+
+const getEvenMoreValidPasswords = (input) => {
+  let counter = 0;
+  input.forEach((item) => {
+    const min = item.substring(0, item.indexOf("-"));
+    const max = item.substring(item.indexOf("-") + 1, item.indexOf(" "));
+    const letter = item.substring(item.indexOf(" ") + 1, item.indexOf(":"));
+    const password = item.substring(item.indexOf(":") + 2);
+
+    if (
+      (password[min - 1] === letter && password[max - 1] === letter) ||
+      (password[min - 1] !== letter && password[max - 1] !== letter)
+    ) {
+      return;
+    } else {
+      counter += 1;
+    }
+  });
+  return counter;
+};
+
+console.log(
+  "getEvenMoreValidPasswords result",
+  getEvenMoreValidPasswords(input)
+);
