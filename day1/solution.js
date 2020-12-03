@@ -1,5 +1,5 @@
 const fs = require("fs");
-const input = fs.readFileSync("input.txt", "utf-8").trim().split("\n");
+const input = fs.readFileSync("day1/input.txt", "utf-8").trim().split("\n");
 
 // --- Day 1: Report Repair ---
 // After saving Christmas five years in a row, you've decided to take a vacation at a nice resort on a tropical island. Surely, Christmas will go on without you.
